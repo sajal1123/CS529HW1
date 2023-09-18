@@ -16,7 +16,7 @@ export default function useSVGCanvas(d3Container){
             d3.select(d3Container.current).selectAll('svg').remove();
 
             var h = d3Container.current.clientHeight;
-            var w = d3Container.current.clientWidth;
+            var w = d3Container.current.clientWidth + 100;
 
             var canvas = d3.select(d3Container.current)
                 .append('svg')

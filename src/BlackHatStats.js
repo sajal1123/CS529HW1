@@ -92,7 +92,7 @@ export default function BlackHatStats(props){
             .attr('fill','none');
 
         //add a title
-        const labelSize = margin/2;
+        const labelSize = margin/2; 
         svg.selectAll('text').remove();
         svg.append('text')
             .attr('x',width/2)

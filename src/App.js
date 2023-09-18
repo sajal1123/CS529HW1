@@ -79,7 +79,14 @@ function App() {
                 style={{'height': '100%','width':'14em','display':'inline-block','verticalAlign':'text-bottom'}}
               >
                 <h1>{'Instructions'}</h1>
-                <p>{'Click on each state to zoom and unzoom'}</p>
+                <ul>
+                  <li>Click on each state to zoom and unzoom</li>
+                  <li>Hover over the black bubbles to explore details about each city</li>
+                  <li>The scatterplot has a scroll-zoom feature, you can use it to analyze the gun deaths in each state separated by gender</li>
+                  <li>Click on the zoomed scatterplot to drag and explore each state in detail</li>
+                </ul>
+                
+                
               </div>
             </div>
             <div style={{'height': '49%','width':'99%'}}>
