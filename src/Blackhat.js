@@ -59,11 +59,14 @@ export default function Blackhat(props){
             }
             function getStateVal(name){
                 let count = getCount(name);
+                console.log("COUNT = ", count);
                 let val = stateScale(count);
+                console.log("STATE VAL = ", val);
                 return val
             }
 
             function getStateColor(d){
+                console.log("imput to colormap = ", getStateVal(d.properties.NAME));
                 return colorMap(getStateVal(d.properties.NAME))
             }
 

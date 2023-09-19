@@ -39,14 +39,19 @@ export default function Whitehat(props){
             const stateData = props.data.states;
 
             //EDIT THIS TO CHANGE WHAT IS USED TO ENCODE COLOR
-            const getEncodedFeature = d => [d.count, (d.count/d.population)*1000000]
+            const getEncodedFeature = d => [d.count, ((d.count/d.population)*1000000)]
 
             //this section of code sets up the colormap
-            console.log("STATE DATA = ", Object.values(stateData).map(getEncodedFeature)[0]);
+            // console.log("STATE DATA = ", Object.values(stateData).map(getEncodedFeature)[0]);
             const stateCounts1 = Object.values(stateData).map(getEncodedFeature)[0];
-
+            
+            const stateCounts2 = Object.values(stateData).map(getEncodedFeature)[1];
+            
             //get color extends for the color legend
             const [stateMin,stateMax] = d3.extent(stateCounts1);
+            const [stateMin2,stateMax2] = d3.extent(stateCounts2);
+            // const stateMin2 = 56
+            // const stateMax2 = 92
 
             //color map scale, scales numbers to a smaller range to use with a d3 color scale
             //we're using 1-0 to invert the red-yellow-green color scale
@@ -64,8 +69,8 @@ export default function Whitehat(props){
                 "(103,0,13)"
             ]
             const stateScale = d3.scaleLinear()
-                .domain([stateMin,stateMax])
-                .range([0,1]);
+                .domain([9,stateMax2-182])
+                .range([0, 1]);
 
             //TODO: EDIT HERE TO CHANGE THE COLOR SCHEME
             //this function takes a number 0-1 and returns a color
@@ -94,7 +99,9 @@ export default function Whitehat(props){
             // console.log("getStateVal(California) = ", getStateVal("California"));
             // console.log("getStateVal(Colorado) = ", getStateVal("Colorado"));
             function getStateColor(d){
+                console.log("statescale domain = ", stateMin2, stateMax2);
                 // console.log("getStateVal = ", getStateVal(d.properties.NAME));
+                console.log("input to colormap = ", getStateVal(d.properties.NAME)[1]);
                 return colorMap(getStateVal(d.properties.NAME)[1])
             }
 
@@ -119,7 +126,7 @@ export default function Whitehat(props){
                     if(props.brushedState !== state){
                         props.setBrushedState(state);
                     }
-                    console.log("AVAILABLE INFO STATE = ", d);
+                    // console.log("AVAILABLE INFO STATE = ", d);
                     let sname = d.properties.NAME;
                     let countPM = getCount(sname)[1];
                     let count = getCount(sname)[0]
@@ -156,7 +163,7 @@ export default function Whitehat(props){
                 .attr('id',d=>d.key)
                 .attr('cx',d=> projection([d.lng,d.lat])[0])
                 .attr('cy',d=> projection([d.lng,d.lat])[1])
-                .attr('r',d=>(minDotSize + cityScale(d.count)))
+                .attr('r',d=>(minDotSize + 1.5*Math.sqrt(cityScale(d.count))))
                 .attr('opacity',.7)
                 .on('mouseover',function(e, d) {
                     let city = cleanString(d.city);
@@ -166,13 +173,13 @@ export default function Whitehat(props){
                     }
                     // d3.select('circle').attr('opacity', 1)
                     // console.log("THIS EVENT = ", e.target.attr('opacity', 1));
-                    d3.select(this).attr('r', d => (minDotSize + cityScale(d.count))*1.5);
+                    d3.select(this).attr('r', d => (minDotSize + Math.sqrt(cityScale(d.count)))*1.5);
                     d3.select(this).attr('fill', 'red');
                     let cname = d.city;
                     let count = d.count;
                     let pop = d.population;
                     let deathsPC = 100000*(count/pop)
-                    console.log("AVAILABLE INFO = ", d);
+                    // console.log("AVAILABLE INFO = ", d);
                     let text = cname + '</br>'
                         + 'Gun Deaths: ' + count
                     tTip.html(text);
@@ -180,7 +187,7 @@ export default function Whitehat(props){
                     //see app.js for the helper function that makes this easier
                     props.ToolTip.moveTTipEvent(tTip,e);
                 }).on('mouseout', function(e, d) {
-                    d3.select(this).attr('r', d => (minDotSize + cityScale(d.count)));
+                    d3.select(this).attr('r', d => (minDotSize + 1.5*Math.sqrt(cityScale(d.count))));
                     d3.select(this).attr('fill', 'black');
                     props.setBrushedState();
                     props.ToolTip.hideTTip(tTip);
@@ -200,18 +207,17 @@ export default function Whitehat(props){
                 
                 let colorLData = [];
                 let ctr = 0;
-                console.log("Color Palette = ", colorPalette);
                 //OPTIONAL: EDIT THE VALUES IN THE ARRAY TO CHANGE THE NUMBER OF ITEMS IN THE COLOR LEGEND
-                for(let ratio of [0.1,.2,.3,.4,.6,.7,.8,.9,.99]){
-                    let val = (1-ratio)*stateMin + ratio*stateMax;
+                for(let ratio of [0,.2,.3,.4,.6,.7,.8,.9,1]){
+                    let val = (1-ratio)*9 + ratio*92;
+                    let valNum = (1-ratio)*9 + ratio*92;
                     let scaledVal = stateScale(val);
                     let color = colorMap(scaledVal);
-                    console.log("colorPalette[ctr] = ", color);
                     ctr += 1;
                     let entry = {
                         'x': legendX,
                         'y': legendY,
-                        'value': val,
+                        'value': valNum,
                         'color':color,
                     }
                     entry.text = (entry.value).toFixed(0);

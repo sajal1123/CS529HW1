@@ -109,23 +109,31 @@ export default function WhiteHatStats(props){
                 // Remove lines and labels on mouseout
                 props.ToolTip.hideTTip(tTip);
             });
-            
+                    
+        // Draw the line for x = 0
+        svg.append("line")
+        .attr("id", "x-axis-line")
+        .attr("x1", xScale(0))
+        .attr("y1", 0)
+        .attr("x2", xScale(0))
+        .attr("y2", height)
+        .attr("stroke", "black")
+        .attr("stroke-width", 0.5);
+
+        // Draw the line for y = 0
+        svg.append("line")
+        .attr("id", "y-axis-line")
+        .attr("x1", 0)
+        .attr("y1", yScale(0))
+        .attr("x2", width)
+        .attr("y2", yScale(0))
+        .attr("stroke", "black")
+        .attr("stroke-width", 0.5);
         //draw the line
         let xValues = []
         for(let state of data){
             xValues.push(state.population);
         }
-
-        let xValuesMale = []
-        for(let state of data){
-            xValues.push(state.male_count);
-        }
-
-        let xValuesFemale = []
-        for(let state of data){
-            xValues.push(state.count - state.male_count);
-        }
-
 
         let popRange = d3.extent(plotData, d=>d.population)
         console.log("POP RANGE = ", popRange);
@@ -178,6 +186,7 @@ export default function WhiteHatStats(props){
         const labelSize = margin/2;
         svg.selectAll('text').remove();
         svg.append('text')
+        
             .attr('x',width/2)
             .attr('y',labelSize)
             .attr('text-anchor','middle')
@@ -185,32 +194,33 @@ export default function WhiteHatStats(props){
             .attr('font-weight','bold')
             .text('Gun Deaths v/s State Population');
 
-        //change the disclaimer here
+        // Append the legend text elements in the desired order
         svg.append('text')
-            .attr('x',width-20)
-            .attr('y',height/1.8)
-            .attr('text-anchor','end')
-            .attr('font-size',10)
+            .attr('x', width - 20)
+            .attr('y', height / 1.8)
+            .attr('text-anchor', 'end')
+            .attr('font-size', 10)
             .attr('fill', 'black')
-            .text("Total Deaths: "+ (100000*nationalAverage).toFixed(2)+" deaths/100,000\nresidents");
+            .style('font-weight', 'bold') // Add this line
+            .text("Total Deaths: " + (100000 * nationalAverage).toFixed(2) + " deaths/100,000 residents");
 
-        //change the disclaimer here
         svg.append('text')
-            .attr('x',width-20)
-            .attr('y',height/1.7)
-            .attr('text-anchor','end')
-            .attr('font-size',10)
+            .attr('x', width - 20)
+            .attr('y', height / 1.7)
+            .attr('text-anchor', 'end')
+            .attr('font-size', 10)
             .attr('fill', 'blue')
-            .text("Male Deaths: "+ (100000*maleAverage).toFixed(2)+" deaths/100,000\nresidents");
+            .style('font-weight', 'bold') // Add this line
+            .text("Male Deaths: " + (100000 * maleAverage).toFixed(2) + " deaths/100,000 residents");
 
-                    //change the disclaimer here
         svg.append('text')
-        .attr('x',width-20)
-        .attr('y',height/1.61)
-        .attr('text-anchor','end')
-        .attr('font-size',10)
-        .attr('fill', 'red')
-        .text("Female Deaths: "+ (100000*femaleAverage).toFixed(2)+" deaths/100,000\nresidents");
+            .attr('x', width - 20)
+            .attr('y', height / 1.61)
+            .attr('text-anchor', 'end')
+            .attr('font-size', 10)
+            .attr('fill', 'red')
+            .style('font-weight', 'bold') // Add this line
+            .text("Female Deaths: " + (100000 * femaleAverage).toFixed(2) + " deaths/100,000 residents");
 
 
         //draw basic axes using the x and y scales
@@ -300,6 +310,19 @@ export default function WhiteHatStats(props){
             linePath.attr('d', lineGenerator); // Redraw the line
             linePathMale.attr('d', lineGeneratorMale); // Redraw the line
             linePathFemale.attr('d', lineGeneratorFemale); // Redraw the line
+
+            // Update the position of the x=0 and y=0 lines
+            svg.select('#x-axis-line')
+            .attr('x1', new_xScale(0))
+            .attr('y1', 0)
+            .attr('x2', new_xScale(0))
+            .attr('y2', height);
+
+        svg.select('#y-axis-line')
+            .attr('x1', 0)
+            .attr('y1', new_yScale(0))
+            .attr('x2', width)
+            .attr('y2', new_yScale(0));
 
         }
         
