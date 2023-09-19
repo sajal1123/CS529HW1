@@ -113,9 +113,9 @@ export default function WhiteHatStats(props){
         // Draw the line for x = 0
         svg.append("line")
         .attr("id", "x-axis-line")
-        .attr("x1", xScale(0))
+        .attr("x1", margin-2)
         .attr("y1", 0)
-        .attr("x2", xScale(0))
+        .attr("x2", margin-2)
         .attr("y2", height)
         .attr("stroke", "black")
         .attr("stroke-width", 0.5);

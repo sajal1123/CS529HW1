@@ -9,7 +9,7 @@ In order to rectify these problems, I followed some conventions discussed in cla
 
 - Modified the color scheme of the map- using a sequential and colorblind safe color scale. I used a red colored theme to intuitively map the "danger" of violence in each state.
 - Added a tooltip to show City data on mouse over.
-- Modified the code to use area to encode city gun deaths.
+- Modified the code to use area to encode city gun deaths. I used the formula r = (1 + 1.5 * Math.sqrt(_count_)), where _count_ is the number of deaths in that city.
 - Updated the x-axis of the bottom plot to show the population of each state. The y-axis is left unchanged.
 - Split the data by gender and plotted it with separate color encoding. Further, I added a line for each gender to indicate the nation-wide average gun deaths per 100,000 male/female residents to give the user additional context.
 - Modified the color scale on the map to show deaths per 1 Million residents in each state rather than the total number of deaths.
