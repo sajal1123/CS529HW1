@@ -59,9 +59,11 @@ function App() {
     
         return (
           <>
+          
             <div style={{'width':'100%','height':'50%','display':'inline-block'}}>
               <div 
-                style={{'height': '100%','width':'calc(100% - 15em)','display':'inline-block'}}
+                className={'shadow'}
+                style={{'height': '100%','width':'calc(100% - 25em)','display':'inline-block'}}
               >
                   <Whitehat
                     map={map}

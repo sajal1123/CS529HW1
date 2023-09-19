@@ -88,10 +88,10 @@ export default function Whitehat(props){
             }
             function getStateVal(name){
                 let count = getCount(name);
-                console.log("getCount = ", count);
+                // console.log("getCount = ", count);
                 let valCount = stateScale(count[0]);
                 let valDPC = stateScale(count[1]);
-                console.log("valCount, ValDPC = ", valCount, valDPC);
+                // console.log("valCount, ValDPC = ", valCount, valDPC);
                 return [valCount, valDPC]
             }
             // console.log(d3.extent(stateCounts));
@@ -99,9 +99,9 @@ export default function Whitehat(props){
             // console.log("getStateVal(California) = ", getStateVal("California"));
             // console.log("getStateVal(Colorado) = ", getStateVal("Colorado"));
             function getStateColor(d){
-                console.log("statescale domain = ", stateMin2, stateMax2);
+                // console.log("statescale domain = ", stateMin2, stateMax2);
                 // console.log("getStateVal = ", getStateVal(d.properties.NAME));
-                console.log("input to colormap = ", getStateVal(d.properties.NAME)[1]);
+                // console.log("input to colormap = ", getStateVal(d.properties.NAME)[1]);
                 return colorMap(getStateVal(d.properties.NAME)[1])
             }
 
@@ -241,7 +241,7 @@ export default function Whitehat(props){
                 const legendTitle = {
                     'x': legendX - barWidth,
                     'y': bounds.y,
-                    'text': 'Gun Deaths Per Million Residents' 
+                    'text': 'Deaths/Million Residents' 
                 }
                 svg.selectAll('.legendText')
                     .data([legendTitle].concat(colorLData)).enter()
@@ -249,6 +249,7 @@ export default function Whitehat(props){
                     .attr('x',d=>d.x+barWidth+5)
                     .attr('y',d=>d.y+barHeight/2 + fontHeight/4)
                     .attr('font-size',(d,i) => i == 0? 1.2*fontHeight:fontHeight)
+                    .attr('font-weight', 'bold')
                     .text(d=>d.text);
             }
 

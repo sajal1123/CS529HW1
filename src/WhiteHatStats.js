@@ -11,7 +11,10 @@ export default function WhiteHatStats(props){
     //this will automatically resize when the window changes so passing svg to a useeffect will re-trigger
     const [svg, height, width,  tTip] = useSVGCanvas(d3Container);
 
-    const margin = 50;
+    const marginTop = 50;
+    const marginBottom = 20;
+    const marginLeft = 50;
+    const marginRight = 50;
     const radius = 1;
 
 
@@ -27,15 +30,17 @@ export default function WhiteHatStats(props){
         
         //get data for each state
         const plotData = [];
-        console.log("state data = ", data);
+        // console.log("state data = ", data);
         for(let state of data){
             const dd = drawingDifficulty[state.abreviation];
             let entry = {
+                'abbreviation': state.abreviation,
                 'count': state.count,
                 'name': state.state,
                 // 'easeOfDrawing': dd === undefined? 5: dd,
                 'genderRatio': state.male_count/state.count,
                 'population': parseInt(state.population),
+                'deaths_per_million': (state.count/state.population)*1000000,
                 'male_deaths': state.male_count,
                 'female_deaths': state.count - state.male_count
             }
@@ -43,15 +48,15 @@ export default function WhiteHatStats(props){
         }
 
         //get transforms for each value into x and y coordinates
-        console.log("x domain = ", d3.extent(plotData,d=>d.population));
-        console.log("x range = ", [width-margin-radius, margin+radius]);
+        // console.log("x domain = ", d3.extent(plotData,d=>d.population));
+        // console.log("x range = ", [width-marginLeft-radius, marginLeft+radius]);
         
-        let xScale = d3.scaleLinear()
-            .domain(d3.extent(plotData,d=>d.population))
-            .range([margin+radius, width-margin-radius]);
-        let yScale = d3.scaleLinear()
-            .domain(d3.extent(plotData,d=>d.male_deaths))
-            .range([height-margin-radius,margin+radius]);
+        // let xScale = d3.scaleLinear()
+        //     .domain(d3.extent(plotData,d=>d.population))
+        //     .range([margin+radius, width-margin-radius]);
+        // let yScale = d3.scaleLinear()
+        //     .domain(d3.extent(plotData,d=>d.male_deaths))
+        //     .range([height-margin-radius,margin+radius]);
 
 
         //draw a line showing the mean values across the curve
@@ -60,167 +65,161 @@ export default function WhiteHatStats(props){
         var nationalAverage = d3.sum(plotData, d=>(d.count))/d3.sum(plotData, d=>d.population)
         var maleAverage = d3.sum(plotData, d=>(d.male_deaths))/d3.sum(plotData, d=>d.population)
         var femaleAverage = d3.sum(plotData, d=>((d.count - d.male_deaths)))/d3.sum(plotData, d=>d.population)
-        console.log("National Average = ", nationalAverage);
         
-        //scale color by gender ratio for no reason
-        let colorScale = d3.scaleDiverging()
-            .domain([0,.5,1])
-            .range(['magenta','white','navy']);
-
         //draw the circles for each state
-        svg.selectAll('.dot').remove();
-        let circles1 = svg.selectAll('.dot').data(plotData)
-            .enter().append('circle')
-            .attr('cy',d=> yScale(d.male_deaths))
-            .attr('cx',d=>xScale(d.population))
-            .attr('fill',d=> 'blue')
-            .attr('r',5)
-            .on('mouseover',(e,d)=>{
-                let string = '<strong>' + d.name + '</strong>' + '</br>'
-                    + 'Gun Deaths: ' + d.count + '</br>'
-                    + 'Male Deaths: ' + d.male_deaths + '<br>'
-                    + 'Male Deaths Per 100k: ' + (100000*d.male_deaths/d.population).toFixed(2);
-                props.ToolTip.moveTTipEvent(tTip,e)
-                tTip.html(string)
-            }).on('mousemove',(e)=>{
-                props.ToolTip.moveTTipEvent(tTip,e);
-            }).on('mouseout',(e,d)=>{
-                props.ToolTip.hideTTip(tTip);
-            });
+        // svg.selectAll('.dot').remove();
+        // let circles1 = svg.selectAll('.dot').data(plotData)
+        //     .enter().append('circle')
+        //     .attr('cy',d=> yScale(d.male_deaths))
+        //     .attr('cx',d=>xScale(d.population))
+        //     .attr('fill',d=> 'blue')
+        //     .attr('r',5)
+        //     .on('mouseover',(e,d)=>{
+        //         let string = '<strong>' + d.name + '</strong>' + '</br>'
+        //             + 'Gun Deaths: ' + d.count + '</br>'
+        //             + 'Male Deaths: ' + d.male_deaths + '<br>'
+        //             + 'Male Deaths Per 100k: ' + (100000*d.male_deaths/d.population).toFixed(2);
+        //         props.ToolTip.moveTTipEvent(tTip,e)
+        //         tTip.html(string)
+        //     }).on('mousemove',(e)=>{
+        //         props.ToolTip.moveTTipEvent(tTip,e);
+        //     }).on('mouseout',(e,d)=>{
+        //         props.ToolTip.hideTTip(tTip);
+        //     });
 
-        svg.selectAll('.dot').remove();
-        let circles2 = svg.selectAll('.dot').data(plotData)
-            .enter().append('circle')
-            .attr('cy',d=> yScale(d.female_deaths))
-            .attr('cx',d=>xScale(d.population))
-            .attr('fill',d=> 'pink')
-            .attr('r',5)
-            .on('mouseover',(e,d)=>{
-                let string = '<strong>' + d.name + '</strong>' + '</br>'
-                    + 'Gun Deaths: ' + d.count + '</br>'
-                    + 'Female Deaths: ' + (d.count - d.male_deaths) + '<br>'
-                    + 'Female Deaths Per 100k: ' + (100000*(d.count - d.male_deaths)/d.population).toFixed(2);
+        // svg.selectAll('.dot').remove();
+        // let circles2 = svg.selectAll('.dot').data(plotData)
+        //     .enter().append('circle')
+        //     .attr('cy',d=> yScale(d.female_deaths))
+        //     .attr('cx',d=>xScale(d.population))
+        //     .attr('fill',d=> 'pink')
+        //     .attr('r',5)
+        //     .on('mouseover',(e,d)=>{
+        //         let string = '<strong>' + d.name + '</strong>' + '</br>'
+        //             + 'Gun Deaths: ' + d.count + '</br>'
+        //             + 'Female Deaths: ' + (d.count - d.male_deaths) + '<br>'
+        //             + 'Female Deaths Per 100k: ' + (100000*(d.count - d.male_deaths)/d.population).toFixed(2);
                 
-                props.ToolTip.moveTTipEvent(tTip,e)
-                tTip.html(string)
-            }).on('mousemove',(e)=>{
-                props.ToolTip.moveTTipEvent(tTip,e);
-            }).on('mouseout',(e,d)=>{
-                // Remove lines and labels on mouseout
-                props.ToolTip.hideTTip(tTip);
-            });
+        //         props.ToolTip.moveTTipEvent(tTip,e)
+        //         tTip.html(string)
+        //     }).on('mousemove',(e)=>{
+        //         props.ToolTip.moveTTipEvent(tTip,e);
+        //     }).on('mouseout',(e,d)=>{
+        //         // Remove lines and labels on mouseout
+        //         props.ToolTip.hideTTip(tTip);
+        //     });
                     
-        // Draw the line for x = 0
-        svg.append("line")
-        .attr("id", "x-axis-line")
-        .attr("x1", margin-2)
-        .attr("y1", 0)
-        .attr("x2", margin-2)
-        .attr("y2", height)
-        .attr("stroke", "black")
-        .attr("stroke-width", 0.5);
+        // // Draw the line for x = 0
+        // svg.append("line")
+        // .attr("id", "x-axis-line")
+        // .attr("x1", margin-2)
+        // .attr("y1", 0)
+        // .attr("x2", margin-2)
+        // .attr("y2", height)
+        // .attr("stroke", "black")
+        // .attr("stroke-width", 0.5);
 
-        // Draw the line for y = 0
-        svg.append("line")
-        .attr("id", "y-axis-line")
-        .attr("x1", 0)
-        .attr("y1", yScale(0))
-        .attr("x2", width)
-        .attr("y2", yScale(0))
-        .attr("stroke", "black")
-        .attr("stroke-width", 0.5);
+        // // Draw the line for y = 0
+        // svg.append("line")
+        // .attr("id", "y-axis-line")
+        // .attr("x1", 0)
+        // .attr("y1", yScale(0))
+        // .attr("x2", width)
+        // .attr("y2", yScale(0))
+        // .attr("stroke", "black")
+        // .attr("stroke-width", 0.5);
         //draw the line
-        let xValues = []
-        for(let state of data){
-            xValues.push(state.population);
-        }
-
-        let popRange = d3.extent(plotData, d=>d.population)
-        console.log("POP RANGE = ", popRange);
-        let yValues = []
-        // for(let i=parseInt(popRange[0]); i<parseInt(popRange[1]); i++){
-        //     yValues.push(parseInt(nationalAverage*i))
+        // let xValues = []
+        // for(let state of data){
+        //     xValues.push(state.population);
         // }
-        console.log("xValues = ", xValues);
-        // Calculate corresponding y values
-        console.log("yVals  = ", yValues);
-        // Create a line generator
-        let lineGenerator = d3.line()
-            .x(d => xScale(d))
-            .y(d => yScale(nationalAverage * d));
 
-        // Append the path element to plot the line
-        var linePath = svg.append('path')
-            .datum(xValues)
-            .attr('d', lineGenerator)
-            .attr('fill', 'red')
-            .attr('strike-width', .5)
-            .attr('stroke', 'black');
+        // let popRange = d3.extent(plotData, d=>d.population)
+        // console.log("POP RANGE = ", popRange);
+        // let yValues = []
+        // // for(let i=parseInt(popRange[0]); i<parseInt(popRange[1]); i++){
+        // //     yValues.push(parseInt(nationalAverage*i))
+        // // }
+        // console.log("xValues = ", xValues);
+        // // Calculate corresponding y values
+        // console.log("yVals  = ", yValues);
+        // // Create a line generator
+        // let lineGenerator = d3.line()
+        //     .x(d => xScale(d))
+        //     .y(d => yScale(nationalAverage * d));
 
-        let lineGeneratorMale = d3.line()
-        .x(d => xScale(d))
-        .y(d => yScale(maleAverage * d));
+        // // Append the path element to plot the line
+        // var linePath = svg.append('path')
+        //     .datum(xValues)
+        //     .attr('d', lineGenerator)
+        //     .attr('fill', 'red')
+        //     .attr('strike-width', .5)
+        //     .attr('stroke', 'black');
 
-    // Append the path element to plot the line
-    var linePathMale = svg.append('path')
-        .datum(xValues)
-        .attr('d', lineGeneratorMale)
-        .attr('fill', 'red')
-        .attr('strike-width', .5)
-        .attr('stroke', 'blue');
-
-    let lineGeneratorFemale = d3.line()
-    .x(d => xScale(d))
-    .y(d => yScale(femaleAverage * d));
+        // let lineGeneratorMale = d3.line()
+        // .x(d => xScale(d))
+        // .y(d => yScale(maleAverage * d));
 
     // Append the path element to plot the line
-    var linePathFemale = svg.append('path')
-        .datum(xValues)
-        .attr('d', lineGeneratorFemale)
-        .attr('fill', 'red')
-        .attr('strike-width', .5)
-        .attr('stroke', 'red');
+    // var linePathMale = svg.append('path')
+    //     .datum(xValues)
+    //     .attr('d', lineGeneratorMale)
+    //     .attr('fill', 'red')
+    //     .attr('strike-width', .5)
+    //     .attr('stroke', 'blue');
+
+    // let lineGeneratorFemale = d3.line()
+    // .x(d => xScale(d))
+    // .y(d => yScale(femaleAverage * d));
+
+    // // Append the path element to plot the line
+    // var linePathFemale = svg.append('path')
+    //     .datum(xValues)
+    //     .attr('d', lineGeneratorFemale)
+    //     .attr('fill', 'red')
+    //     .attr('strike-width', .5)
+    //     .attr('stroke', 'red');
     
 
-        //change the title
-        const labelSize = margin/2;
-        svg.selectAll('text').remove();
-        svg.append('text')
+    //     //change the title
+    //     const labelSize = margin/2;
+    //     svg.selectAll('text').remove();
+    //     svg.append('text')
         
-            .attr('x',width/2)
-            .attr('y',labelSize)
-            .attr('text-anchor','middle')
-            .attr('font-size',labelSize)
-            .attr('font-weight','bold')
-            .text('Gun Deaths v/s State Population');
+    //         .attr('x',width/2)
+    //         .attr('y',labelSize)
+    //         .attr('text-anchor','middle')
+    //         .attr('font-size',labelSize)
+    //         .attr('font-weight','bold')
+    //         .text('Gun Deaths v/s State Population');
 
-        // Append the legend text elements in the desired order
-        svg.append('text')
-            .attr('x', width - 20)
-            .attr('y', height / 1.8)
-            .attr('text-anchor', 'end')
-            .attr('font-size', 10)
-            .attr('fill', 'black')
-            .style('font-weight', 'bold') // Add this line
-            .text("Total Deaths: " + (100000 * nationalAverage).toFixed(2) + " deaths/100,000 residents");
+    //     // Append the legend text elements in the desired order
+    //     svg.append('text')
+    //         .attr('x', width - 20)
+    //         .attr('y', height / 1.8)
+    //         .attr('text-anchor', 'end')
+    //         .attr('font-size', 10)
+    //         .attr('fill', 'black')
+    //         .style('font-weight', 'bold') // Add this line
+    //         .text("Total Deaths: " + (100000 * nationalAverage).toFixed(2) + " deaths/100,000 residents");
 
-        svg.append('text')
-            .attr('x', width - 20)
-            .attr('y', height / 1.7)
-            .attr('text-anchor', 'end')
-            .attr('font-size', 10)
-            .attr('fill', 'blue')
-            .style('font-weight', 'bold') // Add this line
-            .text("Male Deaths: " + (100000 * maleAverage).toFixed(2) + " deaths/100,000 residents");
+    //     svg.append('text')
+    //         .attr('x', width - 20)
+    //         .attr('y', height / 1.7)
+    //         .attr('text-anchor', 'end')
+    //         .attr('font-size', 10)
+    //         .attr('fill', 'blue')
+    //         .style('font-weight', 'bold') // Add this line
+    //         .text("Male Deaths: " + (100000 * maleAverage).toFixed(2) + " deaths/100,000 residents");
 
-        svg.append('text')
-            .attr('x', width - 20)
-            .attr('y', height / 1.61)
-            .attr('text-anchor', 'end')
-            .attr('font-size', 10)
-            .attr('fill', 'red')
-            .style('font-weight', 'bold') // Add this line
-            .text("Female Deaths: " + (100000 * femaleAverage).toFixed(2) + " deaths/100,000 residents");
+    //     svg.append('text')
+    //         .attr('x', width - 20)
+    //         .attr('y', height / 1.61)
+    //         .attr('text-anchor', 'end')
+    //         .attr('font-size', 10)
+    //         .attr('fill', 'red')
+    //         .style('font-weight', 'bold') // Add this line
+    //         .text("Female Deaths: " + (100000 * femaleAverage).toFixed(2) + " deaths/100,000 residents");
 
 
         //draw basic axes using the x and y scales
@@ -237,100 +236,218 @@ export default function WhiteHatStats(props){
             //     .call(d3.axisLeft(yScale))
 
         
-        let xAxis = d3.axisBottom(xScale);
-        let yAxis = d3.axisLeft(yScale);
+        // let xAxis = d3.axisBottom(xScale);
+        // let yAxis = d3.axisLeft(yScale);
+
+        // // Append the axes to the SVG
+        // let xAxisGroup = svg.append('g')
+        //     .attr('transform', `translate(0,${height-margin+1})`)
+        //     .call(xAxis);
+
+        // let yAxisGroup = svg.append('g')
+        //     .attr('transform',`translate(${margin-2},0)`)
+        //     .call(yAxis);
+        
+        // // Add labels to the axes
+        // xAxisGroup.selectAll('.x-axis-label').remove(); // Remove existing labels
+        // yAxisGroup.selectAll('.y-axis-label').remove(); // Remove existing labels
+
+        // svg.append('text')
+        //     .attr('class', 'x-axis-label')
+        //     .attr('transform', `translate(0,${height-margin+2})`)
+        //     .attr('x', width/2)
+        //     .attr('y', margin-10) // Adjust the position as needed
+        //     .style('text-anchor', 'middle')
+        //     .text('Population');
+
+        // svg.append('text')
+        //     .attr('class', 'y-axis-label')
+        //     // .attr('transform',`translate(${margin-3},0)`)
+        //     // .attr('transform', 'rotate(90)')
+        //     .attr('x', margin-25)
+        //     .attr('y', margin/3) // Adjust the position as needed
+        //     .style('text-anchor', 'middle')
+        //     .text('Deaths');
+
+        const barWidth = 5;
+
+        console.log("plot Data = ", plotData);
+        const keys = Object.keys(plotData[0]).slice(6)
+        console.log("Keys - ", keys);
+        const stack = d3.stack().keys(keys)(plotData)
+        
+        //convert data for stack bar chart
+        stack.map((d,i) => {
+            d.map(d => {
+              d.key = keys[i]
+              return d
+            })
+            return d
+          })
+        
+          //calcualte the max gundeath value
+        const yMax = d3.max(plotData, d => {
+            var val = 0
+            for(var k of keys){
+                val += d[k]
+            }
+            return val
+        })
+        console.log("yMAX = ", yMax);
+        const xScale = d3.scaleBand().domain(plotData.map(d => d.abbreviation)).range([marginLeft, width - marginRight]).padding(0.1);
+
+        const yScale = d3.scaleLinear().domain([0, yMax]).range([height - marginBottom, marginTop])
+
+        console.log("Stack -> ", stack);
+
+        svg.selectAll('g').remove();
+        svg.selectAll('g')
+            .data(stack).enter()
+            .append('g')
+            .selectAll('rect')
+            .data(d => d).enter()
+            .append('rect')
+                .attr('x', d => 5 + xScale(d.data.abbreviation))
+                .attr('y', d => yScale(d[1]))
+                .attr('id',d => d.data.name)
+                .attr('width', 10)
+                .attr('height', d => {
+                    return yScale(d[0]) - yScale(d[1])
+                })
+                .attr('fill', d => d.key == 'male_deaths' ? 'blue' : 'pink')
+                .attr('opacity', .5)
+                .attr('stroke', 'lightblue')
+                .attr('stroke-width', .6)
+                .on('mouseover',(e,d)=>{
+                    let state = d.data.name;
+                    if(props.brushedState !== state){
+                        props.setBrushedState(state);
+                    }
+                    let string = '<strong>' + d.data.name.replaceAll('_',' ') + '</strong>' + '</br>'
+                        + '<div class="toolTipTextStyle">' + 'Gun Deaths:&nbsp;&nbsp;' + '<p class="toolTipFont">' + d.data.count + '</p>' + '</div>'
+                        + '<div class="toolTipTextStyle">' + 'Gun Deaths per 100000:&nbsp;&nbsp;' + '<p class="toolTipFont">' + d.data.deaths_per_million + '</p>' + '</div>'
+                        + '<div class="toolTipTextStyle">' + 'Male victims:&nbsp;&nbsp;' + '<p class="toolTipFont">' + d.data.male_deaths + '</p>' + '</div>'
+                        + '<div class="toolTipTextStyle">' + 'Female victims:&nbsp;&nbsp;' + '<p class="toolTipFont">' + d.data.female_deaths + '</p>' + '</div>'
+                    props.ToolTip.moveTTipEvent(tTip,e)
+                    tTip.html(string)
+                }).on('mousemove',(e)=>{
+                    props.ToolTip.moveTTipEvent(tTip,e);
+                }).on('mouseout',(e,d)=>{
+                    props.setBrushedState();
+                    props.ToolTip.hideTTip(tTip);
+                });
+
+        svg.append('g')
+            .call(d3.axisBottom(xScale))
+            .attr('transform', `translate(0,${height - marginBottom})`)
+
+        svg.append('g')
+            .call(d3.axisLeft(yScale))
+            .attr('transform', `translate(${marginLeft},0)`)
+
+
+            ////////     CHAT GPT CODE    ////////////
+
+
+        // let stackedData = plotData.map(d => {
+        //     return {
+        //         population: d.population,
+        //         deaths: [
+        //             { category: 'Male Deaths', value: d.male_deaths },
+        //             { category: 'Female Deaths', value: d.count - d.male_deaths }
+        //         ]
+        //     };
+        // });
+
+        // let yStackedScale = d3.scaleLinear()
+        // .domain([0, d3.max(stackedData, d => d3.sum(d.deaths, e => e.value))])
+        // .range([height - margin - radius, margin + radius]);
+
+        // let bars = svg.selectAll('.barGroup')
+        //     .data(stackedData)
+        //     .enter().append('g')
+        //     .attr('class', 'barGroup')
+        //     .attr('transform', d => `translate(${xScale(d.population)}, 0)`);
+
+        // bars.selectAll('.bar')
+        //     .data(d => d.deaths)
+        //     .enter().append('rect')
+        //     .attr('class', 'bar')
+        //     .attr('x', -barWidth / 2)
+        //     .attr('y', d => yStackedScale(d3.sum(d.deaths.slice(0, d.index + 1), e => e.value)))
+        //     .attr('width', barWidth)
+        //     .attr('height', d => yStackedScale(d.value) - yStackedScale(0))
+        //     .attr('fill', d => (d.category === 'Male Deaths') ? 'blue' : 'pink');
+
+
+        // let yAxisStacked = d3.axisLeft(yStackedScale);
 
         // Append the axes to the SVG
-        let xAxisGroup = svg.append('g')
-            .attr('transform', `translate(0,${height-margin+1})`)
-            .call(xAxis);
+        // let yAxisStackedGroup = svg.append('g')
+        //     .attr('transform',`translate(${margin-2},0)`)
+        //     .call(yAxisStacked);
 
-        let yAxisGroup = svg.append('g')
-            .attr('transform',`translate(${margin-2},0)`)
-            .call(yAxis);
+        // function zoomed(event) {
+        //     // Update scales based on the zoom event
+        //     let new_xScale = event.transform.rescaleX(xScale);
+        //     let new_yScale = event.transform.rescaleY(yScale);
         
-        // Add labels to the axes
-        xAxisGroup.selectAll('.x-axis-label').remove(); // Remove existing labels
-        yAxisGroup.selectAll('.y-axis-label').remove(); // Remove existing labels
-
-        svg.append('text')
-            .attr('class', 'x-axis-label')
-            .attr('transform', `translate(0,${height-margin+2})`)
-            .attr('x', width/2)
-            .attr('y', margin-10) // Adjust the position as needed
-            .style('text-anchor', 'middle')
-            .text('Population');
-
-        svg.append('text')
-            .attr('class', 'y-axis-label')
-            // .attr('transform',`translate(${margin-3},0)`)
-            // .attr('transform', 'rotate(90)')
-            .attr('x', margin-25)
-            .attr('y', margin/3) // Adjust the position as needed
-            .style('text-anchor', 'middle')
-            .text('Deaths');
-
-        function zoomed(event) {
-            // Update scales based on the zoom event
-            let new_xScale = event.transform.rescaleX(xScale);
-            let new_yScale = event.transform.rescaleY(yScale);
+        //     // Update the axes
+        //     xAxis.scale(new_xScale);
+        //     yAxis.scale(new_yScale);
         
-            // Update the axes
-            xAxis.scale(new_xScale);
-            yAxis.scale(new_yScale);
-        
-            // Redraw the axes
-            xAxisGroup.call(xAxis);
-            yAxisGroup.call(yAxis);
+        //     // Redraw the axes
+        //     xAxisGroup.call(xAxis);
+        //     yAxisGroup.call(yAxis);
 
         
-            // Apply the zoom transformation to the circles
-            svg.selectAll('circle')
-                .attr('transform', event.transform);
+        //     // Apply the zoom transformation to the circles
+        //     svg.selectAll('circle')
+        //         .attr('transform', event.transform);
             
-            // Calculate a scale factor based on the zoom level
-            let scaleFactor = event.transform.k;
+        //     // Calculate a scale factor based on the zoom level
+        //     let scaleFactor = event.transform.k;
 
-            // Update the circle radii based on the zoom level
-            circles1.attr('r', 5 * (1/scaleFactor));
-            circles2.attr('r', 5 * (1/scaleFactor));
+        //     // Update the circle radii based on the zoom level
+        //     circles1.attr('r', 5 * (1/scaleFactor));
+        //     circles2.attr('r', 5 * (1/scaleFactor));
 
-            // Update the line path with the new scales
-            lineGenerator.x(d => new_xScale(d)); // Update xScale
-            lineGenerator.y(d => new_yScale(nationalAverage * d)); // Update yScale
+        //     // Update the line path with the new scales
+        //     lineGenerator.x(d => new_xScale(d)); // Update xScale
+        //     lineGenerator.y(d => new_yScale(nationalAverage * d)); // Update yScale
         
-            lineGeneratorMale.x(d => new_xScale(d)); // Update xScale
-            lineGeneratorMale.y(d => new_yScale(maleAverage * d)); // Update yScale
+        //     lineGeneratorMale.x(d => new_xScale(d)); // Update xScale
+        //     lineGeneratorMale.y(d => new_yScale(maleAverage * d)); // Update yScale
 
-            lineGeneratorFemale.x(d => new_xScale(d)); // Update xScale
-            lineGeneratorFemale.y(d => new_yScale(femaleAverage * d)); // Update yScale
+        //     lineGeneratorFemale.x(d => new_xScale(d)); // Update xScale
+        //     lineGeneratorFemale.y(d => new_yScale(femaleAverage * d)); // Update yScale
 
 
 
-            linePath.attr('d', lineGenerator); // Redraw the line
-            linePathMale.attr('d', lineGeneratorMale); // Redraw the line
-            linePathFemale.attr('d', lineGeneratorFemale); // Redraw the line
+        //     linePath.attr('d', lineGenerator); // Redraw the line
+        //     linePathMale.attr('d', lineGeneratorMale); // Redraw the line
+        //     linePathFemale.attr('d', lineGeneratorFemale); // Redraw the line
 
-            // Update the position of the x=0 and y=0 lines
-            svg.select('#x-axis-line')
-            .attr('x1', new_xScale(0))
-            .attr('y1', 0)
-            .attr('x2', new_xScale(0))
-            .attr('y2', height);
+        //     // Update the position of the x=0 and y=0 lines
+        //     svg.select('#x-axis-line')
+        //     .attr('x1', new_xScale(0))
+        //     .attr('y1', 0)
+        //     .attr('x2', new_xScale(0))
+        //     .attr('y2', height);
 
-        svg.select('#y-axis-line')
-            .attr('x1', 0)
-            .attr('y1', new_yScale(0))
-            .attr('x2', width)
-            .attr('y2', new_yScale(0));
+        // svg.select('#y-axis-line')
+        //     .attr('x1', 0)
+        //     .attr('y1', new_yScale(0))
+        //     .attr('x2', width)
+        //     .attr('y2', new_yScale(0));
 
-        }
+        // }
         
-        let zoom = d3.zoom()
-            .scaleExtent([1, 10])
-            .on('zoom', zoomed);
+        // let zoom = d3.zoom()
+        //     .scaleExtent([1, 10])
+        //     .on('zoom', zoomed);
         
-        svg.call(zoom);            
+        // svg.call(zoom);            
     
         
     },[props.data,svg]);
