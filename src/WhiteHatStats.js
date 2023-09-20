@@ -314,20 +314,20 @@ export default function WhiteHatStats(props){
                 .attr('height', d => {
                     return yScale(d[0]) - yScale(d[1])
                 })
-                .attr('fill', d => d.key == 'male_deaths' ? 'blue' : 'pink')
-                .attr('opacity', .5)
-                .attr('stroke', 'lightblue')
-                .attr('stroke-width', .6)
+                .attr('fill', d => d.key == 'male_deaths' ? 'blue' : 'red')
+                .attr('opacity', .8)
+                .attr('stroke', 'white')
+                .attr('stroke-width', .9)
                 .on('mouseover',(e,d)=>{
                     let state = d.data.name;
                     if(props.brushedState !== state){
                         props.setBrushedState(state);
                     }
                     let string = '<strong>' + d.data.name.replaceAll('_',' ') + '</strong>' + '</br>'
-                        + '<div class="toolTipTextStyle">' + 'Gun Deaths:&nbsp;&nbsp;' + '<p class="toolTipFont">' + d.data.count + '</p>' + '</div>'
-                        + '<div class="toolTipTextStyle">' + 'Gun Deaths per 100000:&nbsp;&nbsp;' + '<p class="toolTipFont">' + d.data.deaths_per_million + '</p>' + '</div>'
-                        + '<div class="toolTipTextStyle">' + 'Male victims:&nbsp;&nbsp;' + '<p class="toolTipFont">' + d.data.male_deaths + '</p>' + '</div>'
-                        + '<div class="toolTipTextStyle">' + 'Female victims:&nbsp;&nbsp;' + '<p class="toolTipFont">' + d.data.female_deaths + '</p>' + '</div>'
+                        + '<div class="toolTipTextStyle">' + 'Gun Deaths:' + d.data.count +'</div>'
+                        + '<div class="toolTipTextStyle">' + 'Gun Deaths per million: ' + d.data.deaths_per_million.toFixed(2) + '</div>'
+                        + '<div class="toolTipTextStyle">' + 'Male victims: ' + d.data.male_deaths + '</div>'
+                        + '<div class="toolTipTextStyle">' + 'Female victims: '+ d.data.female_deaths + '</div>'
                     props.ToolTip.moveTTipEvent(tTip,e)
                     tTip.html(string)
                 }).on('mousemove',(e)=>{
@@ -340,12 +340,45 @@ export default function WhiteHatStats(props){
         svg.append('g')
             .call(d3.axisBottom(xScale))
             .attr('transform', `translate(0,${height - marginBottom})`)
+            .attr('class', 'x-axis')
+            .selectAll('text')
+            .attr('transform', 'rotate(-45)')
+            .style('text-anchor', 'end');
 
         svg.append('g')
             .call(d3.axisLeft(yScale))
             .attr('transform', `translate(${marginLeft},0)`)
+            
+        svg.append('text')
+        .text('abc')
 
-
+        const legendData = [
+            { label: 'Male Deaths', color: 'blue' },
+            { label: 'Female Deaths', color: 'red' }
+            ];
+              
+        const legend = svg.append('g')
+        .attr('class', 'legend')
+        .attr('transform', `translate(${width - 130}, 20)`);
+        
+        const legendItems = legend.selectAll('.legend-item')
+        .data(legendData)
+        .enter().append('g')
+        .attr('class', 'legend-item')
+        .attr('transform', (d, i) => `translate(0, ${i * 20})`);
+        
+        legendItems.append('rect')
+        .attr('width', 10)
+        .attr('height', 10)
+        .attr('fill', d => d.color)
+        .attr('opacity', 0.8);
+        
+        legendItems.append('text')
+        .attr('x', 20)
+        .attr('y', 8)
+        .attr('dy', '0.35em')
+        .text(d => d.label);
+          
             ////////     CHAT GPT CODE    ////////////
 
 
