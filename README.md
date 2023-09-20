@@ -15,3 +15,9 @@ In order to rectify these problems, I followed some conventions discussed in cla
 - Modified the color scale on the map to show deaths per 1 Million residents in each state rather than the total number of deaths.
 
 ### Resources
+
+Color Brewer: [https://colorbrewer2.org/#type=sequential&scheme=Reds&n=9](https://colorbrewer2.org/#type=sequential&scheme=Reds&n=9)
+
+Stacked Bar Chart: [https://observablehq.com/@stuartathompson/a-step-by-step-guide-to-the-d3-v4-stacked-bar-chart](https://observablehq.com/@stuartathompson/a-step-by-step-guide-to-the-d3-v4-stacked-bar-chart)
+
+Visual Analysis & Design, Tamara Munzner: [https://i-share-uic.primo.exlibrisgroup.com/discovery/fulldisplay?docid=alma99494790991905897&context=L&vid=01CARLI_UIC:CARLI_UIC&lang=en&search_scope=NewDiscoveryNetwork&adaptor=Local%20Search%20Engine&tab=NewDiscoveryNetwork&query=any,contains,data%20visualization%20munzner&sortby=date_d&facet=frbrgroupid,include,9061679065239940751&offset=0](https://i-share-uic.primo.exlibrisgroup.com/discovery/fulldisplay?docid=alma99494790991905897&context=L&vid=01CARLI_UIC:CARLI_UIC&lang=en&search_scope=NewDiscoveryNetwork&adaptor=Local%20Search%20Engine&tab=NewDiscoveryNetwork&query=any,contains,data%20visualization%20munzner&sortby=date_d&facet=frbrgroupid,include,9061679065239940751&offset=0)
