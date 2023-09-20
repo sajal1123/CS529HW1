@@ -84,8 +84,7 @@ function App() {
                 <ul>
                   <li>Click on each state to zoom and unzoom</li>
                   <li>Hover over the black bubbles to explore details about each city</li>
-                  <li>The scatterplot has a scroll-zoom feature, you can use it to analyze the gun deaths in each state separated by gender</li>
-                  <li>Click on the zoomed scatterplot to drag and explore each state in detail</li>
+                  <li>You can hover over the stacked bar chart to explore additional details about the state</li>
                 </ul>
                 
                 
