@@ -95,7 +95,7 @@ function App() {
               <div className={'title'} 
                 style={{'height':'2em','width':'100%','fontWeight':'bold','fontFamily':'Georgia'}}
               >
-                {'Gun Deaths'}
+                {'Map of Gun Deaths'}
               </div>
               <div style={{'height': 'calc(100% - 2em)','width': '50%','maxWidth': '60em','marginLeft':'25%'}}>
                 <WhiteHatStats

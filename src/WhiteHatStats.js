@@ -2,20 +2,15 @@ import React, {useEffect, useRef,useMemo} from 'react';
 import useSVGCanvas from './useSVGCanvas.js';
 import * as d3 from 'd3';
 
-//change the code below to modify the bottom plot view
 export default function WhiteHatStats(props){
-    //this is a generic component for plotting a d3 plot
     const d3Container = useRef(null);
-    //this automatically constructs an svg canvas the size of the parent container (height and width)
-    //tTip automatically attaches a div of the class 'tooltip' if it doesn't already exist
-    //this will automatically resize when the window changes so passing svg to a useeffect will re-trigger
     const [svg, height, width,  tTip] = useSVGCanvas(d3Container);
 
     const marginTop = 50;
     const marginBottom = 20;
     const marginLeft = 50;
     const marginRight = 50;
-    const radius = 1;
+    const margin = 50;
 
 
     //TODO: modify or replace the code below to draw a more truthful or insightful representation of the dataset. This other representation could be a histogram, a stacked bar chart, etc.
@@ -344,6 +339,29 @@ export default function WhiteHatStats(props){
             .selectAll('text')
             .attr('transform', 'rotate(-45)')
             .style('text-anchor', 'end');
+    
+        svg.append('text')
+        .attr('x', width / 2)
+        .attr('y', marginTop/ 2)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 20)
+        .attr('font-weight', 'bold')
+        .text('Gun Deaths across Males and Females');
+        
+        svg.append('text')
+        .attr('x', marginLeft / 2)
+        .attr('y', height)
+        .attr('font-size', 15)
+        .attr('text-anchor', 'middle')
+        .text('State->');
+
+        svg.append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('x', -height / 2)
+        .attr('y', marginLeft/2 - 10)
+        .attr('font-size', 15)
+        .attr('text-anchor', 'middle')
+        .text('Deaths');
 
         svg.append('g')
             .call(d3.axisLeft(yScale))
